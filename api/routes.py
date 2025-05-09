@@ -27,19 +27,21 @@ def read_patient(patient_id: int, db: Session = Depends(dependencies.get_db)):
         raise HTTPException(status_code=404, detail="Patient not found")
     return db_patient
 
-@router.get("/mri/{mri}", response_model=schemas.Patient)
+@router.get("/mri/{mri}")
 def read_patient_by_mri(mri: str, db: Session = Depends(dependencies.get_db)):
     db_patient = crud.get_patient_by_mri(db, mri=mri)
-    if db_patient is None:
-        raise HTTPException(status_code=404, detail="Patient not found")
-    return db_patient
+    result = 2
+    if db_patient is not None:
+        result = 1 if db_patient.today_flag else 0
+    return {"result": result}
 
-@router.get("/ssn/{ssn_last4}", response_model=schemas.Patient)
+@router.get("/ssn/{ssn_last4}")
 def read_patient_by_ssn(ssn_last4: str, db: Session = Depends(dependencies.get_db)):
     db_patient = crud.get_patient_by_ssn(db, ssn_last4=ssn_last4)
-    if db_patient is None:
-        raise HTTPException(status_code=404, detail="Patient not found")
-    return db_patient
+    result = 2
+    if db_patient is not None:
+        result = 1 if db_patient.today_flag else 0
+    return {"result": result}
 
 @router.put("/{patient_id}", response_model=schemas.Patient)
 def update_patient(patient_id: int, patient: schemas.PatientCreate, db: Session = Depends(dependencies.get_db)):

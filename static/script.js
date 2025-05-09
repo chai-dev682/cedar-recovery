@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     
     // API endpoint
-    const API_URL = '/api/patients';
+    const API_URL = 'https://' + window.location.host + '/api/patients';
     
     // Current patient ID for editing/deleting
     let currentPatientId = null;
