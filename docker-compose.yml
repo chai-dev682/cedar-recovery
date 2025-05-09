@@ -1,0 +1,11 @@
+version: '1.0'
+
+services:
+  cedar-patient-tracker:
+    build: .
+    container_name: cedar-patient-tracker
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    restart: unless-stopped
