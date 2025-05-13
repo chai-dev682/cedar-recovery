@@ -17,8 +17,7 @@ def create_patient(db: Session, patient: schemas.PatientCreate):
     db_patient = models.Patient(
         ssn_last4=patient.ssn_last4,
         mri=patient.mri,
-        next_med_count=patient.next_med_count,
-        today_flag=patient.today_flag
+        next_med_count=patient.next_med_count
     )
     db.add(db_patient)
     db.commit()

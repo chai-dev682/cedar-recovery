@@ -25,17 +25,11 @@
                         </div>
                         <div class="col-md-3">
                             <label for="mri" class="form-label">MRI</label>
-                            <input type="text" class="form-control" id="mri" maxlength="4" pattern="[0-9]{4}" required>
+                            <input type="text" class="form-control" id="mri" minlength="2" maxlength="6" pattern="[0-9]{2,6}" required>
                         </div>
                         <div class="col-md-3">
                             <label for="medCount" class="form-label">Next Med Count</label>
                             <input type="date" class="form-control" id="medCount" required>
-                        </div>
-                        <div class="col-md-3 d-flex align-items-end">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="todayFlag">
-                                <label class="form-check-label" for="todayFlag">Today Flag</label>
-                            </div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Save Patient</button>
@@ -92,15 +86,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="editMri" class="form-label">MRI</label>
-                            <input type="text" class="form-control" id="editMri" required>
+                            <input type="text" class="form-control" id="editMri" minlength="2" maxlength="6" pattern="[0-9]{2,6}" required>
                         </div>
                         <div class="mb-3">
                             <label for="editMedCount" class="form-label">Next Med Count</label>
                             <input type="date" class="form-control" id="editMedCount" required>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="editTodayFlag">
-                            <label class="form-check-label" for="editTodayFlag">Today Flag</label>
                         </div>
                     </form>
                 </div>

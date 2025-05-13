@@ -27,8 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const patientData = {
             ssn_last4: document.getElementById('ssn').value,
             mri: document.getElementById('mri').value,
-            next_med_count: document.getElementById('medCount').value,
-            today_flag: document.getElementById('todayFlag').checked
+            next_med_count: document.getElementById('medCount').value
         };
         
         createPatient(patientData);
@@ -47,8 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const patientData = {
             ssn_last4: document.getElementById('editSsn').value,
             mri: document.getElementById('editMri').value,
-            next_med_count: document.getElementById('editMedCount').value,
-            today_flag: document.getElementById('editTodayFlag').checked
+            next_med_count: document.getElementById('editMedCount').value
         };
         
         updatePatient(currentPatientId, patientData);
@@ -160,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         patients.forEach(patient => {
-            const medCountDate = new Date(patient.next_med_count).toLocaleDateString();
+            const medCountDate = new Date(patient.next_med_count).toISOString().split('T')[0];
             const row = document.createElement('tr');
             
             row.innerHTML = `
@@ -216,8 +214,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const date = new Date(patient.next_med_count);
             const formattedDate = date.toISOString().split('T')[0];
             document.getElementById('editMedCount').value = formattedDate;
-            
-            document.getElementById('editTodayFlag').checked = patient.today_flag;
             
             currentPatientId = patient.id;
             editModal.show();

@@ -1,19 +1,20 @@
 from pydantic import BaseModel, Field
-from datetime import date
 from typing import Optional
+from datetime import date
+
 
 class PatientBase(BaseModel):
     ssn_last4: str = Field(..., min_length=4, max_length=4)
-    mri: str = Field(..., min_length=4, max_length=4)
+    mri: str = Field(..., min_length=2, max_length=6)
     next_med_count: date
-    today_flag: bool = False
 
 class PatientCreate(PatientBase):
     pass
 
 class Patient(PatientBase):
     id: int
-    
+    today_flag: Optional[bool] = None  # This is now a computed field
+
     class Config:
         orm_mode = True
         from_attributes = True

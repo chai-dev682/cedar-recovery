@@ -1,9 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from . import crud, schemas, dependencies
+from datetime import datetime
+import pytz
 
 router = APIRouter(prefix="/api/patients", tags=["patients"])
+
+def is_today_est(date_to_check):
+    est = pytz.timezone('US/Eastern')
+    now_est = datetime.now(est).date()
+    return date_to_check == now_est
 
 @router.post("/", response_model=schemas.Patient)
 def create_patient(patient: schemas.PatientCreate, db: Session = Depends(dependencies.get_db)):
@@ -13,26 +20,35 @@ def create_patient(patient: schemas.PatientCreate, db: Session = Depends(depende
     db_patient2 = crud.get_patient_by_ssn(db, ssn_last4=patient.ssn_last4)
     if db_patient2:
         raise HTTPException(status_code=400, detail="Patient with this SSN already exists")
-    return crud.create_patient(db=db, patient=patient)
+    patient_data = schemas.Patient.from_orm(crud.create_patient(db=db, patient=patient)).dict()
+    patient_data['today_flag'] = is_today_est(patient.next_med_count)
+    return patient_data
 
 @router.get("/", response_model=List[schemas.Patient])
 def read_patients(skip: int = 0, limit: int = 100, db: Session = Depends(dependencies.get_db)):
     patients = crud.get_patients(db, skip=skip, limit=limit)
-    return patients
+    result = []
+    for patient in patients:
+        patient_data = schemas.Patient.from_orm(patient).dict()
+        patient_data['today_flag'] = is_today_est(patient.next_med_count)
+        result.append(patient_data)
+    return result
 
 @router.get("/{patient_id}", response_model=schemas.Patient)
 def read_patient(patient_id: int, db: Session = Depends(dependencies.get_db)):
     db_patient = crud.get_patient(db, patient_id=patient_id)
     if db_patient is None:
         raise HTTPException(status_code=404, detail="Patient not found")
-    return db_patient
+    patient_data = schemas.Patient.from_orm(db_patient).dict()
+    patient_data['today_flag'] = is_today_est(db_patient.next_med_count)
+    return patient_data
 
 @router.get("/mri/{mri}")
 def read_patient_by_mri(mri: str, db: Session = Depends(dependencies.get_db)):
     db_patient = crud.get_patient_by_mri(db, mri=mri)
     result = 2
     if db_patient is not None:
-        result = 1 if db_patient.today_flag else 0
+        result = 1 if is_today_est(db_patient.next_med_count) else 0
     return {"result": result}
 
 @router.get("/ssn/{ssn_last4}")
@@ -40,7 +56,7 @@ def read_patient_by_ssn(ssn_last4: str, db: Session = Depends(dependencies.get_d
     db_patient = crud.get_patient_by_ssn(db, ssn_last4=ssn_last4)
     result = 2
     if db_patient is not None:
-        result = 1 if db_patient.today_flag else 0
+        result = 1 if is_today_est(db_patient.next_med_count) else 0
     return {"result": result}
 
 @router.put("/{patient_id}", response_model=schemas.Patient)
@@ -48,7 +64,9 @@ def update_patient(patient_id: int, patient: schemas.PatientCreate, db: Session 
     db_patient = crud.update_patient(db, patient_id=patient_id, patient=patient)
     if db_patient is None:
         raise HTTPException(status_code=404, detail="Patient not found")
-    return db_patient
+    patient_data = schemas.Patient.from_orm(db_patient).dict()
+    patient_data['today_flag'] = is_today_est(db_patient.next_med_count)
+    return patient_data
 
 @router.delete("/{patient_id}", response_model=bool)
 def delete_patient(patient_id: int, db: Session = Depends(dependencies.get_db)):
