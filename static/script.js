@@ -10,12 +10,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const editForm = document.getElementById('editForm');
     const saveEditBtn = document.getElementById('saveEditBtn');
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const mriSearchInput = document.getElementById('mriSearch');
+    const searchBtn = document.getElementById('searchBtn');
     
     // API endpoint
     const API_URL = 'https://' + window.location.host + '/api/patients';
     
     // Current patient ID for editing/deleting
     let currentPatientId = null;
+    
+    // Store all patients for local filtering
+    let allPatients = [];
     
     // Load patients on page load
     loadPatients();
@@ -34,7 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Event: Refresh button
-    refreshBtn.addEventListener('click', loadPatients);
+    refreshBtn.addEventListener('click', function() {
+        mriSearchInput.value = ''; // Clear search input
+        loadPatients(); // Reload all patients
+    });
     
     // Event: Save edit button
     saveEditBtn.addEventListener('click', function() {
@@ -57,11 +65,24 @@ document.addEventListener('DOMContentLoaded', function() {
         deletePatient(currentPatientId);
     });
     
+    // Add event listener for search button
+    searchBtn.addEventListener('click', function() {
+        filterPatientsByMRI();
+    });
+    
+    // Add event listener for Enter key in search input
+    mriSearchInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            filterPatientsByMRI();
+        }
+    });
+    
     // Function: Load all patients
     function loadPatients() {
         fetch(API_URL)
             .then(response => response.json())
             .then(patients => {
+                allPatients = patients; // Store all patients
                 renderPatientTable(patients);
             })
             .catch(error => {
@@ -244,5 +265,33 @@ document.addEventListener('DOMContentLoaded', function() {
             const bsAlert = new bootstrap.Alert(alertDiv);
             bsAlert.close();
         }, 5000);
+    }
+    
+    // Add a function to filter patients by MRI
+    function filterPatientsByMRI() {
+        const searchTerm = mriSearchInput.value.trim().toLowerCase();
+        
+        if (!searchTerm) {
+            // If search is empty, show all patients
+            renderPatientTable(allPatients);
+            return;
+        }
+        
+        // Filter patients by MRI
+        const filteredPatients = allPatients.filter(patient => 
+            patient.mri.toLowerCase().includes(searchTerm)
+        );
+        
+        if (filteredPatients.length === 0) {
+            // Show message when no patients match the search
+            patientTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center py-3">No patients found matching MRI# "${mriSearchInput.value}"</td>
+                </tr>
+            `;
+        } else {
+            // Render filtered patients
+            renderPatientTable(filteredPatients);
+        }
     }
 });

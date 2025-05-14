@@ -52,3 +52,25 @@ body {
         margin-bottom: 10px;
     }
 }
+
+/* Add to your styles.css file */
+.input-group {
+    width: auto;
+    min-width: 200px;
+}
+
+@media (max-width: 768px) {
+    .card-header {
+        flex-direction: column;
+        align-items: start !important;
+    }
+    
+    .card-header .d-flex {
+        margin-top: 10px;
+        width: 100%;
+    }
+    
+    .input-group {
+        width: 100%;
+    }
+}
