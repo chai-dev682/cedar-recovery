@@ -1,0 +1,26 @@
+# fly.toml app configuration file generated for cedar-patient-tracker on 2025-05-14T21:35:45Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'cedar-patient-tracker'
+primary_region = 'dfw'
+
+[build]
+
+[http_service]
+  internal_port = 5000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '2gb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+[mounts]
+  source = "cedar_data"
+  destination = "/app/data"

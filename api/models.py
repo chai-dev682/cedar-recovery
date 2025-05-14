@@ -12,7 +12,7 @@ class Patient(Base):
     next_med_count = Column(Date)
 
 # Create SQLite database
-SQLALCHEMY_DATABASE_URL = "sqlite:///./cedar_patients.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./data/cedar_patients.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

@@ -14,7 +14,7 @@ RUN apt-get update && \
 EXPOSE 5000
 
 # Copy only requirements file first to leverage Docker cache
-COPY requirements.txt .
+COPY . .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt

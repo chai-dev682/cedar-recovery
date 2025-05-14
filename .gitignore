@@ -173,4 +173,4 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-cedar_patients.db
+data/cedar_patients.db
