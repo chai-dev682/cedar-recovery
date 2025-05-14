@@ -4,9 +4,6 @@ from . import models, schemas
 def get_patient(db: Session, patient_id: int):
     return db.query(models.Patient).filter(models.Patient.id == patient_id).first()
 
-def get_patient_by_ssn(db: Session, ssn_last4: str):
-    return db.query(models.Patient).filter(models.Patient.ssn_last4 == ssn_last4).first()
-
 def get_patient_by_mri(db: Session, mri: str):
     return db.query(models.Patient).filter(models.Patient.mri == mri).first()
 
@@ -15,7 +12,6 @@ def get_patients(db: Session, skip: int = 0, limit: int = 100):
 
 def create_patient(db: Session, patient: schemas.PatientCreate):
     db_patient = models.Patient(
-        ssn_last4=patient.ssn_last4,
         mri=patient.mri,
         next_med_count=patient.next_med_count
     )

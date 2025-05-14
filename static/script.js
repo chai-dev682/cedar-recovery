@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         
         const patientData = {
-            ssn_last4: document.getElementById('ssn').value,
             mri: document.getElementById('mri').value,
             next_med_count: document.getElementById('medCount').value
         };
@@ -52,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         const patientData = {
-            ssn_last4: document.getElementById('editSsn').value,
             mri: document.getElementById('editMri').value,
             next_med_count: document.getElementById('editMedCount').value
         };
@@ -183,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.createElement('tr');
             
             row.innerHTML = `
-                <td>${patient.ssn_last4}</td>
                 <td>${patient.mri}</td>
                 <td>${medCountDate}</td>
                 <td><span class="${patient.today_flag ? 'true-flag' : 'false-flag'}">${patient.today_flag ? 'TRUE' : 'FALSE'}</span></td>
@@ -228,7 +225,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (patient) {
             document.getElementById('editId').value = patient.id;
-            document.getElementById('editSsn').value = patient.ssn_last4;
             document.getElementById('editMri').value = patient.mri;
             
             // Format date for input

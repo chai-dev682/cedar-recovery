@@ -17,9 +17,6 @@ def create_patient(patient: schemas.PatientCreate, db: Session = Depends(depende
     db_patient1 = crud.get_patient_by_mri(db, mri=patient.mri)
     if db_patient1:
         raise HTTPException(status_code=400, detail="Patient with this MRI already exists")
-    db_patient2 = crud.get_patient_by_ssn(db, ssn_last4=patient.ssn_last4)
-    if db_patient2:
-        raise HTTPException(status_code=400, detail="Patient with this SSN already exists")
     patient_data = schemas.Patient.from_orm(crud.create_patient(db=db, patient=patient)).dict()
     patient_data['today_flag'] = is_today_est(patient.next_med_count)
     return patient_data
@@ -46,14 +43,6 @@ def read_patient(patient_id: int, db: Session = Depends(dependencies.get_db)):
 @router.get("/mri/{mri}")
 def read_patient_by_mri(mri: str, db: Session = Depends(dependencies.get_db)):
     db_patient = crud.get_patient_by_mri(db, mri=mri)
-    result = 2
-    if db_patient is not None:
-        result = 1 if is_today_est(db_patient.next_med_count) else 0
-    return {"result": result}
-
-@router.get("/ssn/{ssn_last4}")
-def read_patient_by_ssn(ssn_last4: str, db: Session = Depends(dependencies.get_db)):
-    db_patient = crud.get_patient_by_ssn(db, ssn_last4=ssn_last4)
     result = 2
     if db_patient is not None:
         result = 1 if is_today_est(db_patient.next_med_count) else 0

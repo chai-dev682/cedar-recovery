@@ -4,7 +4,6 @@ from datetime import date
 
 
 class PatientBase(BaseModel):
-    ssn_last4: str = Field(..., min_length=4, max_length=4)
     mri: str = Field(..., min_length=2, max_length=6)
     next_med_count: date
 

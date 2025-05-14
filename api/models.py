@@ -8,7 +8,6 @@ class Patient(Base):
     __tablename__ = "patients"
     
     id = Column(Integer, primary_key=True, index=True)
-    ssn_last4 = Column(String, unique=True, index=True)
     mri = Column(String, unique=True, index=True)
     next_med_count = Column(Date)
 
