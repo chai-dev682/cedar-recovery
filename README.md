@@ -4,8 +4,6 @@ A FastAPI-based application for tracking patient medication information, featuri
 
 ## Features
 
-- Track patient records with Last 4 SSN, MRI numbers, and medication count dates
-- Flag patients for today's medication counts
 - Full CRUD operations (Create, Read, Update, Delete)
 - Responsive design that works on all devices
 - Modern UI with Bootstrap 5
@@ -35,7 +33,6 @@ The application will be available at http://localhost:5000
 - `GET /api/patients` - Get all patients
 - `GET /api/patients/{patient_id}` - Get a specific patient
 - `GET /api/patients/mri/{mri}` - Get a specific patient by mri
-- `GET /api/patients/ssn/{ssn_last4}` - Get a specific patient by last 4 digits of ssn
 - `POST /api/patients` - Create a new patient
 - `PUT /api/patients/{patient_id}` - Update a patient
 - `DELETE /api/patients/{patient_id}` - Delete a patient
